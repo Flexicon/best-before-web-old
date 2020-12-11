@@ -4,29 +4,53 @@
       <Logo />
       <h1 class="title">best-before-web</h1>
       <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+        <button class="button--green" @click="signIn">
+          {{ isAuthed ? `Hi, ${displayName}` : 'Sign In' }}
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      isAuthed: true,
+      userName: null,
+    }
+  },
+
+  computed: {
+    displayName() {
+      return this.userName ?? 'User'
+    },
+  },
+
+  created() {
+    this.handleAuthedUser(this.$identity.currentUser())
+
+    this.$identity.on('login', this.handleAuthedUser)
+
+    this.$identity.on('logout', () => {
+      this.isAuthed = false
+      this.userName = null
+    })
+
+    this.$identity.on('error', (err) => console.error('Error', err)) // eslint-disable-line
+  },
+
+  methods: {
+    signIn() {
+      this.$identity.open()
+    },
+
+    handleAuthedUser(user) {
+      this.isAuthed = !!user
+      this.userName = user.user_metadata.full_name || null
+    },
+  },
+}
 </script>
 
 <style>
