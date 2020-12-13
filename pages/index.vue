@@ -47,7 +47,7 @@ export default {
 
     handleAuthedUser(user) {
       this.isAuthed = !!user
-      this.userName = user.user_metadata.full_name || null
+      this.userName = user?.user_metadata?.full_name || null
     },
   },
 }
