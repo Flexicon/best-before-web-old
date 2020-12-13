@@ -23,9 +23,11 @@
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/pwa": "^3.0.2",
     "core-js": "^3.6.5",
+    "express": "^4.17.1",
     "netlify-identity-widget": "^1.9.1",
     "netlify-lambda": "^2.0.2",
-    "nuxt": "^2.14.6"
+    "nuxt": "^2.14.6",
+    "serverless-http": "^2.6.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",
