@@ -1,11 +1,12 @@
-exports.handler = function (event, context) {
-  const { user } = context.clientContext
-  if (!user) {
-    return { statusCode: 401, body: 'Unauthorized' }
+const { isAuthenticated, unauthorized } = require('../auth')
+
+exports.handler = function (event, context, callback) {
+  if (!isAuthenticated(context)) {
+    return callback(null, unauthorized())
   }
 
   // TODO: fetch a list of products
-  return {
+  return callback(null, {
     statusCode: 200,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify([
@@ -13,5 +14,5 @@ exports.handler = function (event, context) {
       { id: '13', name: 'Shampoo', expiryDate: '2025-01-01' },
       { id: '14', name: 'Shaving cream', expiryDate: '2021-06-01' },
     ]),
-  }
+  })
 }
