@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
+    "build": "yarn generate && yarn build:functions",
+    "build:functions": "netlify-lambda build lambda",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
@@ -23,6 +24,7 @@
     "@nuxtjs/pwa": "^3.0.2",
     "core-js": "^3.6.5",
     "netlify-identity-widget": "^1.9.1",
+    "netlify-lambda": "^2.0.2",
     "nuxt": "^2.14.6"
   },
   "devDependencies": {

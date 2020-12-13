@@ -1,4 +1,4 @@
-const { isAuthenticated, unauthorized } = require('../auth')
+const { isAuthenticated, unauthorized } = require('./helpers/auth')
 
 exports.handler = function (event, context, callback) {
   if (!isAuthenticated(context)) {
