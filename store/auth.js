@@ -1,0 +1,47 @@
+export const state = () => ({
+  isLoggedIn: false,
+  userName: null,
+})
+
+export const mutations = {
+  setLoggedIn(state) {
+    state.isLoggedIn = true
+  },
+
+  setLoggedOut(state) {
+    state.isLoggedIn = false
+  },
+
+  setUserName(state, name) {
+    state.userName = name
+  },
+}
+
+export const actions = {
+  logIn({ commit }, user) {
+    commit('setLoggedIn')
+    commit('setUserName', user.user_metadata?.full_name)
+
+    this.$axios.setToken(user?.token?.access_token, 'Bearer')
+  },
+
+  logOut({ commit }) {
+    commit('setLoggedOut')
+    commit('setUserName', null)
+
+    this.$axios.setToken(false)
+  },
+
+  refreshAuth({ commit }) {
+    return this.$identity
+      .refresh()
+      .then((jwt) => {
+        this.$axios.setToken(jwt, 'Bearer')
+        return true
+      })
+      .catch(() => {
+        commit('logOut')
+        return false
+      })
+  },
+}

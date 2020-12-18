@@ -1,131 +1,38 @@
 <template>
-  <div class="container">
-    <div>
+  <b-container>
+    <div class="text-center mt-5">
       <Logo />
-      <h1 class="title">best-before-web</h1>
-      <div class="links">
-        <button class="button--green" @click="signIn">
-          {{ isAuthed ? `Hi, ${displayName}` : 'Sign In' }}
-        </button>
-      </div>
+      <h1 class="title mt-3 mb-4">best-before-web</h1>
 
-      <ul>
-        <li v-for="p in products" :key="p._id">{{ p.name }} - {{ p.expiryDate }}</li>
-      </ul>
+      <b-spinner v-if="isLoading" />
+
+      <b-list-group v-else>
+        <b-list-group-item v-for="p in products" :key="p._id">{{ p.name }} - {{ p.expiryDate }}</b-list-group-item>
+      </b-list-group>
     </div>
-  </div>
+  </b-container>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      isAuthed: false,
-      userName: null,
-      products: [],
-    }
-  },
-
   computed: {
-    displayName() {
-      return this.userName ?? 'User'
+    products() {
+      return this.$store.state.products.products
+    },
+
+    isLoading() {
+      return this.$store.state.products.isLoading
+    },
+
+    isLoggedIn() {
+      return this.$store.state.auth.isLoggedIn
     },
   },
 
-  watch: {
-    isAuthed(val) {
-      if (val) {
-        this.fetchProducts()
-      }
-    },
-  },
-
-  created() {
-    this.handleAuthedUser(this.$identity.currentUser())
-
-    this.$identity.on('login', this.handleAuthedUser)
-
-    this.$identity.on('logout', this.handleAuthedUser)
-
-    this.$identity.on('error', (err) => console.error('Error', err))
-  },
-
-  methods: {
-    signIn() {
-      this.$identity.open()
-    },
-
-    handleAuthedUser(user) {
-      this.isAuthed = !!user
-      this.userName = user?.user_metadata?.full_name || null
-
-      if (this.isAuthed) {
-        this.$axios.setToken(user?.token?.access_token, 'Bearer')
-      } else {
-        this.$axios.setToken(false)
-      }
-    },
-
-    fetchProducts() {
-      this.$axios
-        .get('/.netlify/functions/products')
-        .then(({ data }) => {
-          this.products = data
-        })
-        .catch((err) => {
-          if (err.response?.status === 401) {
-            this.refreshAuth().then(() => this.fetchProducts())
-          } else {
-            console.error(err)
-          }
-        })
-    },
-
-    refreshAuth() {
-      return this.$identity
-        .refresh()
-        .then((jwt) => {
-          this.$axios.setToken(jwt, 'Bearer')
-          return true
-        })
-        .catch(() => {
-          this.handleAuthedUser()
-          return false
-        })
-    },
+  mounted() {
+    if (this.isLoggedIn) {
+      this.$store.dispatch('products/fetchProducts')
+    }
   },
 }
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
