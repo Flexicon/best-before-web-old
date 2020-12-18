@@ -28,7 +28,11 @@ export const actions = {
       })
       .catch((err) => {
         if (err.response?.status === 401) {
-          dispatch('auth/refreshAuth', null, { root: true }).then(() => dispatch('fetchProducts'))
+          dispatch('auth/refreshAuth', null, { root: true }).then((success) => {
+            if (success) {
+              dispatch('fetchProducts')
+            }
+          })
         } else {
           console.error(err)
         }
