@@ -1,18 +1,16 @@
-const { isAuthenticated, unauthorized } = require('./helpers/auth')
+import { isAuthenticated, unauthorized } from './helpers/auth'
+import { Product } from './helpers/db'
 
-exports.handler = function (event, context, callback) {
+exports.handler = async (event, context) => {
   if (!isAuthenticated(context)) {
-    return callback(null, unauthorized())
+    return unauthorized()
   }
 
-  // TODO: fetch a list of products
-  return callback(null, {
+  const products = await Product.findByUserID(context.clientContext.user.sub)
+
+  return {
     statusCode: 200,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify([
-      { id: '12', name: 'Nivea lotion', expiryDate: '2021-02-18' }, // TODO: replace dummy data
-      { id: '13', name: 'Shampoo', expiryDate: '2025-01-01' },
-      { id: '14', name: 'Shaving cream', expiryDate: '2021-06-01' },
-    ]),
-  })
+    body: JSON.stringify(products),
+  }
 }
