@@ -8,6 +8,10 @@
           {{ isAuthed ? `Hi, ${displayName}` : 'Sign In' }}
         </button>
       </div>
+
+      <ul>
+        <li v-for="p in products" :key="p._id">{{ p.name }} - {{ p.expiryDate }}</li>
+      </ul>
     </div>
   </div>
 </template>
@@ -16,14 +20,23 @@
 export default {
   data() {
     return {
-      isAuthed: true,
+      isAuthed: false,
       userName: null,
+      products: [],
     }
   },
 
   computed: {
     displayName() {
       return this.userName ?? 'User'
+    },
+  },
+
+  watch: {
+    isAuthed(val) {
+      if (val) {
+        this.fetchProducts()
+      }
     },
   },
 
@@ -37,7 +50,7 @@ export default {
       this.userName = null
     })
 
-    this.$identity.on('error', (err) => console.error('Error', err)) // eslint-disable-line
+    this.$identity.on('error', (err) => console.error('Error', err))
   },
 
   methods: {
@@ -48,6 +61,32 @@ export default {
     handleAuthedUser(user) {
       this.isAuthed = !!user
       this.userName = user?.user_metadata?.full_name || null
+
+      if (this.isAuthed) {
+        this.$axios.setToken(user?.token?.access_token, 'Bearer')
+      }
+    },
+
+    fetchProducts() {
+      this.$axios
+        .get('/.netlify/functions/products')
+        .then(({ data }) => {
+          this.products = data
+        })
+        .catch((err) => {
+          if (err.response?.status === 401) {
+            this.refreshAuth().then(() => this.fetchProducts())
+          } else {
+            console.error(err)
+          }
+        })
+    },
+
+    refreshAuth() {
+      return this.$identity.refresh().then((jwt) => {
+        this.$axios.setToken(jwt, 'Bearer')
+        return true
+      })
     },
   },
 }
