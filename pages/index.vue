@@ -45,10 +45,7 @@ export default {
 
     this.$identity.on('login', this.handleAuthedUser)
 
-    this.$identity.on('logout', () => {
-      this.isAuthed = false
-      this.userName = null
-    })
+    this.$identity.on('logout', this.handleAuthedUser)
 
     this.$identity.on('error', (err) => console.error('Error', err))
   },
@@ -64,6 +61,8 @@ export default {
 
       if (this.isAuthed) {
         this.$axios.setToken(user?.token?.access_token, 'Bearer')
+      } else {
+        this.$axios.setToken(false)
       }
     },
 
@@ -83,10 +82,16 @@ export default {
     },
 
     refreshAuth() {
-      return this.$identity.refresh().then((jwt) => {
-        this.$axios.setToken(jwt, 'Bearer')
-        return true
-      })
+      return this.$identity
+        .refresh()
+        .then((jwt) => {
+          this.$axios.setToken(jwt, 'Bearer')
+          return true
+        })
+        .catch(() => {
+          this.handleAuthedUser()
+          return false
+        })
     },
   },
 }
