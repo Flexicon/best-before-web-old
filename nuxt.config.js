@@ -29,8 +29,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss',
+    'bootstrap-vue/nuxt',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -44,6 +43,12 @@ export default {
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
     baseURL: '',
+  },
+
+  // BootstrapVue module config (https://bootstrap-vue.org/docs#nuxt-js)
+  bootstrapVue: {
+    // Install the `IconsPlugin` plugin (in addition to `BootstrapVue` plugin)
+    icons: true,
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
