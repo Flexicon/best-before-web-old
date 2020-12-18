@@ -53,4 +53,9 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
+
+  // Router middleware configuration (https://nuxtjs.org/docs/2.x/directory-structure/middleware/)
+  router: {
+    middleware: 'routeAuth',
+  },
 }

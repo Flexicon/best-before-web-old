@@ -1,7 +1,6 @@
 <template>
   <b-container>
     <div class="text-center mt-5">
-      <Logo />
       <h1 class="title mt-3 mb-4">best-before-web</h1>
 
       <b-spinner v-if="isLoading" />
@@ -29,10 +28,15 @@ export default {
     },
   },
 
-  mounted() {
-    if (this.isLoggedIn) {
-      this.$store.dispatch('products/fetchProducts')
-    }
+  watch: {
+    isLoggedIn: {
+      handler(val) {
+        if (val) {
+          this.$store.dispatch('products/fetchProducts')
+        }
+      },
+      immediate: true,
+    },
   },
 }
 </script>

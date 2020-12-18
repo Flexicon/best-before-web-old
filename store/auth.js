@@ -23,6 +23,7 @@ export const actions = {
     commit('setUserName', user.user_metadata?.full_name)
 
     this.$axios.setToken(user?.token?.access_token, 'Bearer')
+    this.$router.push({ name: 'index' })
   },
 
   logOut({ commit }) {
@@ -30,6 +31,8 @@ export const actions = {
     commit('setUserName', null)
 
     this.$axios.setToken(false)
+    this.$identity.close()
+    this.$router.push({ name: 'login' })
   },
 
   refreshAuth({ commit }) {
