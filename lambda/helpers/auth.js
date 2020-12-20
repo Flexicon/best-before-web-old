@@ -13,4 +13,10 @@ exports.isAuthenticated = (context) => {
   return Boolean(user)
 }
 
-exports.unauthorized = () => ({ statusCode: 401, body: 'Unauthorized' })
+exports.unauthorized = () => ({
+  statusCode: 401,
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ message: 'Unauthorized' }),
+})
+
+exports.userIDFromContext = (context) => context?.clientContext?.user?.sub
