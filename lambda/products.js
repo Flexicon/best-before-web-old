@@ -39,7 +39,7 @@ async function createHandler(event, context) {
   // Create new product from payload and assign user details
   const { name, expiryDate } = payload
   const { user } = context.clientContext
-  const product = new Product({ name, expiryDate, created_by: user.sub })
+  const product = new Product({ name, expiryDate, createdBy: user.sub })
 
   try {
     await product.save()
@@ -64,7 +64,7 @@ async function deleteHandler(event, context) {
     console.error('Failed to lookup product:', err)
   }
 
-  if (!product || product.created_by !== userIDFromContext(context)) {
+  if (!product || product.createdBy !== userIDFromContext(context)) {
     return jsonResponse(404, { message: 'Product not found' })
   }
 
