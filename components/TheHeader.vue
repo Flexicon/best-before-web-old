@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <b-navbar toggleable="lg">
+    <b-navbar class="pl-0 pr-0" toggleable="lg">
       <b-navbar-brand href="#">BestBefore</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>

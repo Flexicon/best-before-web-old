@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/moment": "^1.6.1",
     "@nuxtjs/pwa": "^3.0.2",
     "bootstrap-vue": "^2.21.1",
     "core-js": "^3.6.5",
