@@ -1,16 +1,23 @@
-const mongoose = require('mongoose')
+import { connect, Schema, model } from 'mongoose'
 
 const uri = process.env.MONGODB_URI
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Schemas
-const ProductSchema = mongoose.Schema({ name: String, expiryDate: Date, createdBy: String })
+const ProductSchema = Schema({ name: String, expiryDate: Date, createdBy: String })
 
 ProductSchema.statics.findByUserID = function (id) {
   return this.find({ createdBy: id }).sort({ expiryDate: 1 })
 }
 
-// Models
-const Product = mongoose.model('Product', ProductSchema)
+ProductSchema.statics.serialize = function (product) {
+  const { _id: id, name, expiryDate, createdBy } = product
+  return { id, name, expiryDate, createdBy }
+}
 
-exports.Product = Product
+ProductSchema.methods.serialize = function () {
+  return this.model('Product').serialize(this)
+}
+
+// Models
+export const Product = model('Product', ProductSchema)

@@ -25,7 +25,7 @@ exports.handler = async (event, context) => {
 async function listHandler(event, context) {
   const products = await Product.findByUserID(context.clientContext.user.sub)
 
-  return jsonResponse(200, products)
+  return jsonResponse(200, products.map(Product.serialize))
 }
 
 async function createHandler(event, context) {
@@ -48,7 +48,7 @@ async function createHandler(event, context) {
     return jsonResponse(500, { message: 'Failed to save product' })
   }
 
-  return jsonResponse(201, product)
+  return jsonResponse(201, product.serialize())
 }
 
 async function deleteHandler(event, context) {
