@@ -6,12 +6,13 @@
       :img-alt="`${name} - image`"
       img-top
       tag="article"
+      class="ProductsListItem__card"
     >
       <b-card-text>
         {{ $moment(expiryDate).format('MMMM Do YYYY') }}
       </b-card-text>
 
-      <div class="ProductListItem__actions">
+      <div class="ProductsListItem__actions">
         <b-button variant="danger" @click="$emit('remove')">
           <b-icon-trash-fill />
         </b-button>
@@ -45,7 +46,17 @@ export default {
 </script>
 
 <style scoped>
-.ProductListItem__actions button {
+.ProductsListItem__actions button {
   font-size: 0.75rem;
+}
+
+.ProductsListItem__card {
+  box-shadow: 0px 3px 5px 0px #ddd;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ProductsListItem__card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 10px 0px #ddd;
 }
 </style>
