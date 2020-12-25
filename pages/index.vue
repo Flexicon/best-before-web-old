@@ -7,8 +7,6 @@
 </template>
 
 <script>
-let fetchProductsTimeout = null
-
 export default {
   computed: {
     products() {
@@ -28,25 +26,14 @@ export default {
     isLoggedIn: {
       handler(val) {
         if (val) {
-          this.startFetchingProducts()
+          this.$store.dispatch('products/fetchProducts')
         }
       },
       immediate: true,
     },
   },
 
-  beforeDestroy() {
-    if (fetchProductsTimeout) clearTimeout(fetchProductsTimeout)
-  },
-
   methods: {
-    async startFetchingProducts() {
-      if (!this.isLoggedIn) return
-
-      await this.$store.dispatch('products/fetchProducts')
-      fetchProductsTimeout = setTimeout(this.startFetchingProducts, 10000)
-    },
-
     removeProduct(product) {
       this.$store.dispatch('products/removeProduct', product.id)
     },
