@@ -39,17 +39,6 @@ export const actions = {
       .then(({ data }) => {
         commit('setProducts', data)
       })
-      .catch((err) => {
-        if (err.response?.status === 401) {
-          dispatch('auth/refreshAuth', null, { root: true }).then((success) => {
-            if (success) {
-              dispatch('fetchProducts')
-            }
-          })
-        } else {
-          console.error(err)
-        }
-      })
       .finally(() => {
         commit('stopLoading')
       })
@@ -62,17 +51,6 @@ export const actions = {
       .delete(`/.netlify/functions/products?id=${id}`)
       .then(() => {
         commit('deleteProduct', id)
-      })
-      .catch((err) => {
-        if (err.response?.status === 401) {
-          dispatch('auth/refreshAuth', null, { root: true }).then((success) => {
-            if (success) {
-              dispatch('removeProduct', id)
-            }
-          })
-        } else {
-          console.error(err)
-        }
       })
       .finally(() => commit('setProductBusy', { id, busy: false }))
   },
