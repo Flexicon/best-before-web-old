@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <div class="mt-4">
-      <products-list :busy="isLoading" :products="products" />
+      <products-list :busy="isLoading" :products="products" @remove="removeProduct" />
     </div>
   </b-container>
 </template>
@@ -30,6 +30,12 @@ export default {
         }
       },
       immediate: true,
+    },
+  },
+
+  methods: {
+    removeProduct(product) {
+      this.$store.dispatch('products/removeProduct', product.id)
     },
   },
 }

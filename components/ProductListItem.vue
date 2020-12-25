@@ -1,30 +1,36 @@
 <template>
-  <b-card
-    :title="name"
-    img-src="https://picsum.photos/600/300/?image=25"
-    :img-alt="`${name} - image`"
-    img-top
-    tag="article"
-  >
-    <b-card-text>
-      {{ $moment(expiryDate).format('MMMM Do YYYY') }}
-    </b-card-text>
+  <b-overlay :show="busy" rounded="sm">
+    <b-card
+      :title="name"
+      :img-src="`https://picsum.photos/seed/${id}/600/300`"
+      :img-alt="`${name} - image`"
+      img-top
+      tag="article"
+    >
+      <b-card-text>
+        {{ $moment(expiryDate).format('MMMM Do YYYY') }}
+      </b-card-text>
 
-    <div class="ProductListItem__actions">
-      <b-button variant="danger">
-        <b-icon-trash-fill />
-      </b-button>
+      <div class="ProductListItem__actions">
+        <b-button variant="danger" @click="$emit('remove')">
+          <b-icon-trash-fill />
+        </b-button>
 
-      <b-button variant="warning">
-        <b-icon-pencil-fill />
-      </b-button>
-    </div>
-  </b-card>
+        <b-button variant="warning" @click="$emit('edit')">
+          <b-icon-pencil-fill />
+        </b-button>
+      </div>
+    </b-card>
+  </b-overlay>
 </template>
 
 <script>
 export default {
   props: {
+    id: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -33,6 +39,7 @@ export default {
       type: String,
       required: true,
     },
+    busy: Boolean,
   },
 }
 </script>
