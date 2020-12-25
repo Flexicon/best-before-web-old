@@ -23,6 +23,7 @@ export const actions = {
     commit('setUserName', user.user_metadata?.full_name)
 
     this.$axios.setToken(user?.token?.access_token, 'Bearer')
+    this.$identity.close()
     this.$router.push({ name: 'index' })
   },
 
