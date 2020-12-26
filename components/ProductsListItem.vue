@@ -59,4 +59,8 @@ export default {
   transform: scale(1.05);
   box-shadow: 0px 6px 10px 0px #ddd;
 }
+
+.card-img-top {
+  min-height: 174px;
+}
 </style>
