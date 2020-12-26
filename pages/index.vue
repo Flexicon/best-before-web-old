@@ -1,18 +1,16 @@
 <template>
-  <b-container>
-    <div class="mt-4">
-      <products-list
-        :busy="isLoading"
-        :saving="isSaving"
-        :products="products"
-        :is-modal-open="isModalOpen"
-        @remove="removeProduct"
-        @save="saveProduct"
-        @open-modal="toggleModal(true)"
-        @close-modal="toggleModal(false)"
-      />
-    </div>
-  </b-container>
+  <div class="mt-4">
+    <products-list
+      :busy="isLoading"
+      :saving="isSaving"
+      :products="products"
+      :is-modal-open="isModalOpen"
+      @remove="removeProduct"
+      @save="saveProduct"
+      @open-modal="toggleModal(true)"
+      @close-modal="toggleModal(false)"
+    />
+  </div>
 </template>
 
 <script>
