@@ -36,7 +36,7 @@ export const actions = {
     this.$router.push({ name: 'login' })
   },
 
-  refreshAuth({ commit }) {
+  refreshAuth(context) {
     return this.$identity
       .refresh()
       .then((jwt) => {
@@ -44,7 +44,7 @@ export const actions = {
         return true
       })
       .catch(() => {
-        commit('logOut')
+        this.$identity.logout()
         return false
       })
   },
