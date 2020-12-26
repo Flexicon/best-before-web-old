@@ -1,21 +1,44 @@
 <template>
   <div>
-    <b-modal title="Add Product" :visible="value" @change="$emit('input', $event)" @show="resetForm" @ok="handleOk">
-      <b-form>
-        <b-form-group label="Product Name:" label-for="name">
-          <b-form-input id="name" v-model="form.name" :state="nameState" required></b-form-input>
-        </b-form-group>
+    <validation-observer v-slot="observerContext">
+      <b-modal
+        title="Add Product"
+        :visible="value"
+        @change="$emit('input', $event)"
+        @show="resetForm"
+        @ok="handleOk($event, observerContext)"
+      >
+        <b-form>
+          <b-form-group label="Product Name:" label-for="name">
+            <validation-provider v-slot="v" name="Name" :rules="{ required: true, min: 3, max: 255 }">
+              <b-form-input id="name" v-model="form.name" :state="getValidationState(v)" required></b-form-input>
 
-        <b-form-group label="Expiry Date:" label-for="expiry-date">
-          <b-form-datepicker id="expiry-date" v-model="form.expiryDate" :state="expiryDateState" />
-        </b-form-group>
-      </b-form>
-    </b-modal>
+              <b-form-invalid-feedback id="name-feedback">{{ v.errors[0] }}</b-form-invalid-feedback>
+            </validation-provider>
+          </b-form-group>
+
+          <b-form-group label="Expiry Date:" label-for="expiry-date">
+            <validation-provider v-slot="v" name="Expiry Date" :rules="{ required: true }">
+              <b-form-datepicker id="expiry-date" v-model="form.expiryDate" :state="getValidationState(v)" />
+
+              <b-form-invalid-feedback id="expiry-date-feedback">{{ v.errors[0] }}</b-form-invalid-feedback>
+            </validation-provider>
+          </b-form-group>
+        </b-form>
+      </b-modal>
+    </validation-observer>
   </div>
 </template>
 
 <script>
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
+
 export default {
+  components: {
+    ValidationObserver,
+    ValidationProvider,
+  },
+
   props: {
     value: Boolean,
   },
@@ -26,20 +49,7 @@ export default {
         name: '',
         expiryDate: '',
       },
-      initialNameState: '',
-      initialExpiryDateState: '',
     }
-  },
-
-  computed: {
-    // TODO: get proper form validation in place
-    nameState() {
-      return !!this.form.name || null
-    },
-
-    expiryDateState() {
-      return !!this.form.expiryDate || null
-    },
   },
 
   methods: {
@@ -50,19 +60,19 @@ export default {
       }
     },
 
-    checkFormValid() {
-      return this.form.name && this.form.expiryDate
+    getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null
     },
 
-    handleOk(e) {
+    handleOk(e, context) {
       e.preventDefault()
+      context.validate()
 
-      if (!this.checkFormValid()) {
+      if (context.invalid) {
         return
       }
 
-      this.$bvToast.toast('Cool 👍', { title: 'Alright!', variant: 'success' })
-      this.hideModal()
+      this.$emit('save', { ...this.form })
     },
 
     hideModal() {

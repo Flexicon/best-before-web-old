@@ -14,7 +14,7 @@
       </b-col>
     </b-row>
 
-    <product-form-modal v-model="isModalOpen" />
+    <product-form-modal v-model="isModalOpen" @save="onSave" />
   </div>
 </template>
 
@@ -39,6 +39,10 @@ export default {
   methods: {
     openAddModal() {
       this.isModalOpen = true
+    },
+
+    onSave(form) {
+      console.log(form)
     },
   },
 }

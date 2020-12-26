@@ -23,6 +23,7 @@ export default {
   plugins: [
     { src: '~/plugins/netlify-identity.js', mode: 'client' },
     { src: '~/plugins/axios.js', mode: 'client' },
+    { src: '~/plugins/validation.js', mode: 'client' },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -56,7 +57,9 @@ export default {
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {},
+  build: {
+    transpile: ['vee-validate/dist/rules'],
+  },
 
   // Router middleware configuration (https://nuxtjs.org/docs/2.x/directory-structure/middleware/)
   router: {
