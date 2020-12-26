@@ -14,12 +14,13 @@
       </b-col>
     </b-row>
 
-    <product-form-modal v-model="isModalOpen" @save="onSave" />
+    <product-form-modal v-model="isModalOpenModel" :busy="saving" @save="$emit('save', $event)" />
   </div>
 </template>
 
 <script>
 import ProductFormModal from './ProductFormModal.vue'
+
 export default {
   components: { ProductFormModal },
   props: {
@@ -28,21 +29,29 @@ export default {
       required: true,
     },
     busy: Boolean,
+    saving: Boolean,
+    isModalOpen: Boolean,
   },
 
-  data() {
-    return {
-      isModalOpen: false,
-    }
+  computed: {
+    isModalOpenModel: {
+      get() {
+        return this.isModalOpen
+      },
+
+      set(val) {
+        val ? this.openAddModal() : this.closeAddModal()
+      },
+    },
   },
 
   methods: {
     openAddModal() {
-      this.isModalOpen = true
+      this.$emit('open-modal')
     },
 
-    onSave(form) {
-      console.log(form)
+    closeAddModal() {
+      this.$emit('close-modal')
     },
   },
 }

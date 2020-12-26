@@ -1,7 +1,16 @@
 <template>
   <b-container>
     <div class="mt-4">
-      <products-list :busy="isLoading" :products="products" @remove="removeProduct" />
+      <products-list
+        :busy="isLoading"
+        :saving="isSaving"
+        :products="products"
+        :is-modal-open="isModalOpen"
+        @remove="removeProduct"
+        @save="saveProduct"
+        @open-modal="toggleModal(true)"
+        @close-modal="toggleModal(false)"
+      />
     </div>
   </b-container>
 </template>
@@ -15,6 +24,14 @@ export default {
 
     isLoading() {
       return this.$store.state.products.isLoading
+    },
+
+    isSaving() {
+      return this.$store.state.products.saving
+    },
+
+    isModalOpen() {
+      return this.$store.state.products.isFormShown
     },
 
     isLoggedIn() {
@@ -36,6 +53,14 @@ export default {
   methods: {
     removeProduct(product) {
       this.$store.dispatch('products/removeProduct', product.id)
+    },
+
+    saveProduct(data) {
+      this.$store.dispatch('products/saveProduct', data)
+    },
+
+    toggleModal(val) {
+      this.$store.commit(val ? 'products/showForm' : 'products/hideForm')
     },
   },
 }

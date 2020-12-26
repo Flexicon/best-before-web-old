@@ -8,7 +8,7 @@
         @show="resetForm"
         @ok="handleOk($event, observerContext)"
       >
-        <b-form>
+        <b-form class="ProductForm">
           <b-form-group label="Product Name:" label-for="name">
             <validation-provider v-slot="v" name="Name" :rules="{ required: true, min: 3, max: 255 }">
               <b-form-input id="name" v-model="form.name" :state="getValidationState(v)" required></b-form-input>
@@ -25,6 +25,8 @@
             </validation-provider>
           </b-form-group>
         </b-form>
+
+        <b-spinner v-if="saving" />
       </b-modal>
     </validation-observer>
   </div>
@@ -41,6 +43,7 @@ export default {
 
   props: {
     value: Boolean,
+    saving: Boolean,
   },
 
   data() {
@@ -81,3 +84,10 @@ export default {
   },
 }
 </script>
+
+<style>
+.ProductForm .form-group {
+  margin-bottom: 5px;
+  min-height: 95px;
+}
+</style>
