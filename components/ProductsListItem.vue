@@ -13,11 +13,11 @@
       </b-card-text>
 
       <div class="ProductsListItem__actions">
-        <b-button variant="danger" @click="$emit('remove')">
+        <b-button variant="danger" @click="onRemove">
           <b-icon-trash-fill />
         </b-button>
 
-        <b-button variant="warning" @click="$emit('edit')">
+        <b-button variant="outline-warning" @click="$emit('edit')">
           <b-icon-pencil-fill />
         </b-button>
       </div>
@@ -41,6 +41,25 @@ export default {
       required: true,
     },
     busy: Boolean,
+  },
+
+  methods: {
+    async onRemove() {
+      const ok = await this.$bvModal.msgBoxConfirm(`Are you sure you want to remove "${this.name}"?`, {
+        title: 'Remove',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'Remove',
+        cancelVariant: 'outline-secondary',
+        footerClass: 'p-2',
+        centered: true,
+      })
+
+      if (ok) {
+        this.$emit('remove')
+      }
+    },
   },
 }
 </script>
