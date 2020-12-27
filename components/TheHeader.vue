@@ -14,7 +14,7 @@
             <span>{{ isAuthed ? `Hi, ${displayName}` : 'Sign in' }}</span>
           </template>
           <b-dropdown-item :to="{ name: 'settings' }">Account Settings</b-dropdown-item>
-          <b-dropdown-item @click="openAuth">Log out</b-dropdown-item>
+          <b-dropdown-item @click="logout">Log out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
@@ -34,8 +34,8 @@ export default {
   },
 
   methods: {
-    openAuth() {
-      this.$identity.open()
+    logout() {
+      this.$identity.logout()
     },
   },
 }
