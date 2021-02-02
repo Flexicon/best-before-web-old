@@ -4,7 +4,7 @@
       <Logo />
     </div>
 
-    <b-button class="mt-4" @click="openAuth">Sign in</b-button>
+    <b-button class="mt-4" variant="primary" @click="openAuth">Sign in</b-button>
   </div>
 </template>
 
