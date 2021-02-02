@@ -8,7 +8,7 @@
         @show="resetForm"
         @ok="handleOk($event, observerContext)"
       >
-        <b-form class="ProductForm">
+        <b-form class="ProductForm" @keydown.meta.enter="handleOk($event, observerContext)">
           <b-form-group label="Product Name:" label-for="name">
             <validation-provider v-slot="v" name="Name" :rules="{ required: true, min: 3, max: 255 }">
               <b-form-input id="name" v-model="form.name" :state="getValidationState(v)" required></b-form-input>
