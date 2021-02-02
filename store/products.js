@@ -18,6 +18,12 @@ export const mutations = {
     state.products = [...state.products, product].sort((a, b) => (a.expiryDate > b.expiryDate ? 1 : -1))
   },
 
+  updateProduct(state, updatedProduct) {
+    state.products = state.products
+      .map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
+      .sort((a, b) => (a.expiryDate > b.expiryDate ? 1 : -1))
+  },
+
   setProductBusy(state, { id, busy }) {
     state.products = state.products.map((p) => {
       if (p.id === id) {
@@ -66,13 +72,15 @@ export const actions = {
       })
   },
 
-  saveProduct({ commit, dispatch }, data) {
+  saveProduct({ commit, dispatch }, { id, ...data }) {
     commit('startSaving')
 
-    return this.$axios
-      .post(`/.netlify/functions/products`, data)
+    const endpoint = '/.netlify/functions/products'
+    const req = id ? this.$axios.patch(`${endpoint}?id=${id}`, data) : this.$axios.post(endpoint, data)
+
+    return req
       .then((res) => {
-        commit('addProduct', res.data)
+        commit(id ? 'updateProduct' : 'addProduct', res.data)
         commit('hideForm')
       })
       .finally(() => commit('stopSaving'))

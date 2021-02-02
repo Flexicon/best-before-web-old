@@ -42,6 +42,10 @@ export default {
   },
 
   props: {
+    product: {
+      type: Object,
+      default: () => null,
+    },
     value: Boolean,
     saving: Boolean,
   },
@@ -58,8 +62,8 @@ export default {
   methods: {
     resetForm() {
       this.form = {
-        name: '',
-        expiryDate: '',
+        name: this.product?.name ?? '',
+        expiryDate: this.product?.expiryDate ?? '',
       }
     },
 

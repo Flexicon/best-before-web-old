@@ -10,11 +10,11 @@
       </b-col>
 
       <b-col v-for="p in products" :key="p.id" cols="12" sm="6" lg="4" class="mb-4">
-        <products-list-item v-bind="p" @remove="$emit('remove', { ...p })" @edit="$emit('edit', { ...p })" />
+        <products-list-item v-bind="p" @remove="$emit('remove', { ...p })" @edit="openEditModal(p)" />
       </b-col>
     </b-row>
 
-    <product-form-modal v-model="isModalOpenModel" :busy="saving" @save="$emit('save', $event)" />
+    <product-form-modal v-model="isModalOpenModel" :busy="saving" :product="editedProduct" @save="onModalSave" />
   </div>
 </template>
 
@@ -33,6 +33,12 @@ export default {
     isModalOpen: Boolean,
   },
 
+  data() {
+    return {
+      editedProduct: null,
+    }
+  },
+
   computed: {
     isModalOpenModel: {
       get() {
@@ -47,11 +53,22 @@ export default {
 
   methods: {
     openAddModal() {
+      this.editedProduct = null
       this.$emit('open-modal')
     },
 
     closeAddModal() {
       this.$emit('close-modal')
+    },
+
+    openEditModal(product) {
+      this.editedProduct = { ...product }
+      this.$emit('open-modal')
+    },
+
+    onModalSave(data) {
+      const id = this.editedProduct?.id || undefined
+      this.$emit('save', { ...data, id })
     },
   },
 }
