@@ -1,15 +1,20 @@
 <template>
   <b-overlay :show="busy" rounded="sm">
     <b-card
-      :title="name"
       :img-src="`https://picsum.photos/seed/${id}/600/300`"
       :img-alt="`${name} - image`"
       img-top
       tag="article"
       class="ProductsListItem__card"
+      :class="{ expired: isExpired }"
     >
+      <b-card-title class="mb-1">{{ name }}</b-card-title>
+
       <b-card-text>
-        {{ $moment(expiryDate).format('MMMM Do YYYY') }}
+        <span :class="expiryIconClass">
+          <b-icon :icon="expiryIcon" />
+        </span>
+        <span>{{ $moment(expiryDate).format('MMMM Do YYYY') }}</span>
       </b-card-text>
 
       <div class="ProductsListItem__actions">
@@ -41,6 +46,33 @@ export default {
       required: true,
     },
     busy: Boolean,
+  },
+
+  computed: {
+    daysTillExpiry() {
+      const expiryDate = this.$moment(this.expiryDate).startOf('day')
+      const today = this.$moment().startOf('day')
+
+      return expiryDate.diff(today, 'days')
+    },
+
+    isExpired() {
+      return this.daysTillExpiry <= 0
+    },
+
+    expiryIcon() {
+      if (this.isExpired) {
+        return 'exclamation-octagon-fill'
+      }
+      return this.daysTillExpiry <= 7 ? 'exclamation-triangle-fill' : 'clock'
+    },
+
+    expiryIconClass() {
+      if (this.isExpired) {
+        return 'text-danger'
+      }
+      return this.daysTillExpiry <= 7 ? 'text-warning' : ''
+    },
   },
 
   methods: {
@@ -77,6 +109,10 @@ export default {
 .ProductsListItem__card:hover {
   transform: scale(1.05);
   box-shadow: 0px 6px 10px 0px #ddd;
+}
+
+.ProductsListItem__card.expired {
+  background: rgba(255, 0, 0, 0.05);
 }
 
 .card-img-top {
