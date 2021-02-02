@@ -19,5 +19,13 @@ ProductSchema.methods.serialize = function () {
   return this.model('Product').serialize(this)
 }
 
+ProductSchema.methods.patch = function (params) {
+  const allowedKeys = ['name', 'expiryDate']
+  const attr = Object.fromEntries(Object.entries(params).filter(([k, v]) => allowedKeys.includes(k) && !!v))
+  Object.assign(this, attr)
+
+  return this
+}
+
 // Models
 export const Product = model('Product', ProductSchema)
