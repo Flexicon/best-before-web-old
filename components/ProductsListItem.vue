@@ -11,7 +11,7 @@
       <b-card-title class="mb-1">{{ name }}</b-card-title>
 
       <b-card-text>
-        <span :class="expiryIconClass">
+        <span v-b-tooltip.hover :class="expiryIconClass" :title="expiryText">
           <b-icon :icon="expiryIcon" />
         </span>
         <span>{{ $moment(expiryDate).format('MMMM Do YYYY') }}</span>
@@ -73,6 +73,15 @@ export default {
       }
       return this.daysTillExpiry <= 7 ? 'text-warning' : ''
     },
+
+    expiryText() {
+      const { daysTillExpiry: days } = this
+
+      if (days === 0) {
+        return `Expires today`
+      }
+      return days < 0 ? `Expired ${Math.abs(days)} days ago` : `Expires in ${days} days`
+    },
   },
 
   methods: {
@@ -107,7 +116,7 @@ export default {
 }
 
 .ProductsListItem__card:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
   box-shadow: 0px 6px 10px 0px #ddd;
 }
 
