@@ -18,7 +18,7 @@
       </b-card-text>
 
       <div class="ProductsListItem__actions">
-        <b-button variant="danger" @click="onRemove">
+        <b-button variant="outline-danger" @click="onRemove">
           <b-icon-trash-fill />
         </b-button>
 

@@ -2,7 +2,7 @@
   <div>
     <validation-observer v-slot="observerContext">
       <b-modal
-        title="Add Product"
+        :title="product ? 'Edit Product' : 'Add Product'"
         :visible="value"
         @change="$emit('input', $event)"
         @show="resetForm"
