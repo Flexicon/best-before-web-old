@@ -7,6 +7,7 @@
       tag="article"
       class="ProductsListItem__card"
       :class="{ expired: isExpired }"
+      @click="$emit('edit')"
     >
       <b-card-title class="mb-1">{{ name }}</b-card-title>
 
@@ -18,12 +19,8 @@
       </b-card-text>
 
       <div class="ProductsListItem__actions">
-        <b-button variant="outline-danger" @click="onRemove">
+        <b-button variant="outline-danger" @click.stop="onRemove">
           <b-icon-trash-fill />
-        </b-button>
-
-        <b-button variant="outline-warning" @click="$emit('edit')">
-          <b-icon-pencil-fill />
         </b-button>
       </div>
     </b-card>
@@ -113,6 +110,7 @@ export default {
 .ProductsListItem__card {
   box-shadow: 0px 3px 5px 0px #ddd;
   transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .ProductsListItem__card:hover {
